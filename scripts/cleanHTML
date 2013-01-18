@@ -1,4 +1,26 @@
 #! /usr/local/bin/python
+'''
+    CleanHTML.py
+
+    Takes any html or xml document (possibly horribly disfigured with out of place tags) and produces
+    a nice standard document with the same content.
+
+    Copyright (C) 2013  Timothy Edmund Crosley
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+'''
 
 import sys
 import codecs
@@ -6,12 +28,15 @@ from WebElements.Parser import WebElementTree
 
 def parseFile(fileName, saveChanges=True):
     fileObj = open(fileName, 'r')
-    text = fileObj.read().decode('utf8')
+    if sys.version > '3':
+        text = fileObj.read()
+    else:
+         text = fileObj.read().decode('utf8')
     tree = WebElementTree(text)
     fileObj.close()
 
     if saveChanges:
-        text = tree.toHtml(formatted=True)
+        text = tree.toHTML(formatted=True)
         fileObj = codecs.open(fileName, encoding='utf-8', mode='w')
         fileObj.write(text)
         fileObj.close()
@@ -19,10 +44,10 @@ def parseFile(fileName, saveChanges=True):
     return tree
 
 def printDoc():
-    print "CleanHTML 0.2 is a forgiving html parser fixer and indenter."
-    print "usage: cleanHTML (filename) [write|safe]"
-    print ""
-    print "safe mode will output warnings without writing the changes to the file."
+    print("CleanHTML 0.2.0 is a forgiving html parser fixer and indenter.")
+    print("usage: cleanHTML (filename) [write|safe]")
+    print("")
+    print("safe mode will output warnings without writing the changes to the file.")
 
 def main(argv):
     if len(argv) < 2:
